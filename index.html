@@ -69,11 +69,13 @@
     </nav>
 
     <div class="card" data-panel="registrar">
-      <p class="muted">En la consola: Acerca de → Cliente OQB → Registrar. Copia el código que aparece.</p>
+      <p class="muted">En la consola: Acerca de → Cliente OQB. Escanea el QR (trae el código) o copia el código que aparece.</p>
       <label for="codigo">Código de la consola</label>
       <input id="codigo" class="codigo" autocomplete="off" autocapitalize="characters" placeholder="XXXX-XXXX-XXXX-XXXX-XX">
       <label for="nombre">Nombre del cliente</label>
       <input id="nombre" autocomplete="off" placeholder="Nombre y apellido">
+      <label for="fecha">Fecha de instalación</label>
+      <input id="fecha" type="date">
       <button class="main" id="registrar">Registrar</button>
       <div id="reg-msg"></div>
     </div>
@@ -176,7 +178,8 @@ $("registrar").addEventListener("click", async () => {
       }
     }
 
-    const fecha = hoy();
+    const fecha = $("fecha").value || hoy();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha) || fecha > hoy()) throw new Error("Revisa la fecha de instalación.");
     const cert = await oqb.emitir(ed, oqb.base64ABytes(leer("oqb_semilla")), idhex, nombre, fecha);
     // El mensaje del commit no lleva el nombre: el repositorio es publico.
     await escribirJson(PUBLICO, ruta, cert, previo ? previo.sha : null, "Certificado " + fecha);
@@ -187,7 +190,7 @@ $("registrar").addEventListener("click", async () => {
     await escribirJson(PRIVADO, "registro.json", lista, reg.sha, "Cliente: " + nombre);
 
     aviso(msg, "ok", `Listo: ${nombre} quedó registrado. En la consola: Acerca de → Cliente OQB → Activar (con internet).`);
-    $("codigo").value = ""; $("nombre").value = "";
+    $("codigo").value = ""; $("nombre").value = ""; $("fecha").value = hoy();
   } catch (e) { aviso(msg, "bad", e.message); }
   finally { boton.disabled = false; }
 });
@@ -263,6 +266,11 @@ async function mostrarSoporte(datos) {
 }
 
 $("ir-inicio").addEventListener("click", () => { history.replaceState(null, "", location.pathname); $("v-soporte").hidden = true; $("v-app").hidden = false; });
+
+$("fecha").value = hoy();
+// Desde el QR de registro de la consola: el codigo ya viene puesto.
+const mc = location.hash.match(/[#&]c=([^&]+)/);
+if (mc) { $("codigo").value = decodeURIComponent(mc[1]); history.replaceState(null, "", location.pathname); $("nombre").focus(); }
 
 const m = location.hash.match(/[#&]s=([^&]+)/);
 if (m) {
