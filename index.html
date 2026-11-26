@@ -8,12 +8,12 @@
 <style>
   :root {
     --bg: #f6f5f2; --card: #ffffff; --ink: #1d1d1f; --muted: #6b6b70; --line: #e4e2dc;
-    --accent: #e4002b; --ok: #1f8a4c; --warn: #b26b00; --bad: #c4211b;
+    --accent: #147846; --accent-ink: #ffffff; --ok: #1f8a4c; --warn: #b26b00; --bad: #c4211b;
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
     :root { --bg: #141416; --card: #1f1f22; --ink: #f2f2f4; --muted: #a0a0a8; --line: #333338;
-            --ok: #48c27a; --warn: #e3a33a; --bad: #ff6a63; color-scheme: dark; }
+            --accent: #34d583; --accent-ink: #0b0f0a; --ok: #48c27a; --warn: #e3a33a; --bad: #ff6a63; color-scheme: dark; }
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--ink);
@@ -32,7 +32,7 @@
                     background: var(--bg); color: var(--ink); }
   input.codigo { font-family: ui-monospace, Menlo, monospace; letter-spacing: 1px; text-transform: uppercase; }
   button.main { width: 100%; margin-top: 16px; padding: 14px; font-size: 17px; font-weight: 600; border: 0;
-                border-radius: 12px; background: var(--accent); color: #fff; }
+                border-radius: 12px; background: var(--accent); color: var(--accent-ink); }
   button.main:disabled { opacity: .5; }
   button.sec { padding: 8px 12px; border-radius: 9px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
   .msg { margin-top: 12px; padding: 12px; border-radius: 10px; font-size: 15px; }
